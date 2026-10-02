@@ -80,6 +80,8 @@ public:
     bool saveBrightnessConfig(uint8_t level);
     bool loadBrightnessConfig(uint8_t &level);
 
+    bool isGpsEnabled() const { return m_gpsEnabled; }
+
 private:
     int32_t m_timezoneOffsetSec = 0;
     bool m_gpsEnabled = false;

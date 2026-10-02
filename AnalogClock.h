@@ -18,6 +18,7 @@ public:
     void create(lv_obj_t *parent = nullptr) override;
     void update() override { updateTime(); }
     void updateTime();
+    void updateStatusLabel();
 
     lv_obj_t *getContainer() const override { return m_container; }
     const char *getModeName() const override { return "CLOCK"; }
@@ -29,6 +30,7 @@ private:
     lv_obj_t *m_minLine = nullptr;
     lv_obj_t *m_secLine = nullptr;
     lv_obj_t *m_dateLabel = nullptr;
+    lv_obj_t *m_statusLabel = nullptr;
     lv_obj_t *m_centerCap = nullptr;
 
     lv_point_precise_t m_hourPts[2];

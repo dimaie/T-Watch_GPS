@@ -1,4 +1,8 @@
 #include "AnalogClock.h"
+#include "WatchGlobals.h"
+#include "WatchCommandController.h"
+#include "HttpServerHandler.h"
+#include <WiFi.h>
 
 AnalogClock::AnalogClock() {
 }
@@ -15,6 +19,12 @@ void AnalogClock::create(lv_obj_t *parent) {
     lv_obj_set_style_bg_opa(m_container, LV_OPA_COVER, 0);
     lv_obj_set_style_border_width(m_container, 0, 0);
     lv_obj_set_style_pad_all(m_container, 0, 0);
+
+    // Status Line Label in Upper Left Corner (Green Accent)
+    m_statusLabel = lv_label_create(m_container);
+    lv_obj_set_style_text_color(m_statusLabel, lv_color_hex(0x00FF66), 0);
+    lv_obj_set_pos(m_statusLabel, 10, 8);
+    lv_obj_clear_flag(m_statusLabel, LV_OBJ_FLAG_CLICKABLE);
 
     int32_t scr_w = instance.width();
     int32_t scr_h = instance.height();
@@ -178,4 +188,22 @@ void AnalogClock::updateTime() {
     if (m_dateLabel) {
         lv_label_set_text_fmt(m_dateLabel, "%s %02d %s", days_str[w], dt.getDay(), months_str[m]);
     }
+
+    updateStatusLabel();
+}
+
+void AnalogClock::updateStatusLabel() {
+    if (!m_statusLabel) return;
+
+    char wifiChar = (WiFi.getMode() != WIFI_OFF) ? 'W' : ' ';
+    char gpsChar  = commandController.isGpsEnabled() ? 'G' : ' ';
+    char httpChar = httpHandler.isEnabled() ? 'H' : ' ';
+
+    int battPct = (int)instance.getBatteryPercent();
+    if (battPct < 0) battPct = 0;
+    if (battPct > 100) battPct = 100;
+
+    char buf[32];
+    snprintf(buf, sizeof(buf), "%c%c%c %d%%", wifiChar, gpsChar, httpChar, battPct);
+    lv_label_set_text(m_statusLabel, buf);
 }

@@ -25,7 +25,7 @@ This document provides a comprehensive summary of the **T-Watch_GPS** firmware c
 ### B. Concrete View Implementations
 1. **[`AnalogClock`](file:///c:/Work/T-Watch_GPS/AnalogClock.h)** ([`AnalogClock.cpp`](file:///c:/Work/T-Watch_GPS/AnalogClock.cpp)):
    - Green-on-black analog watch face with RTC time updates every 500 ms.
-   - Outer dial ring, 60 tick marks (hour/minute), hour numerals (12, 1, 2... 11), hour/minute/second hands, date readout label, and center cap.
+   - Outer dial ring, 60 tick marks (hour/minute), hour numerals (12, 1, 2... 11), hour/minute/second hands, date readout label, center cap, and upper-left status line showing service status letters ('W' for Wi-Fi, 'G' for GPS, 'H' for WebServer in fixed slots) and battery charge percentage.
 2. **[`GpsView`](file:///c:/Work/T-Watch_GPS/GpsView.h)** ([`GpsView.cpp`](file:///c:/Work/T-Watch_GPS/GpsView.cpp)):
    - Live GPS mode displaying status, tracked satellite count (`satellites.value()`), fix satellites state (`3D LOCK` / `SEARCHING...`), and current location coordinates (`Latitude`, `Longitude`, `Altitude`).
    - Displays a clean status message if GPS power is OFF.
