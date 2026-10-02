@@ -1,0 +1,16 @@
+# Build and output directories
+build/
+bin/
+*.bin
+*.elf
+*.hex
+
+# IDE files
+.vscode/
+.idea/
+*.suo
+*.user
+
+# OS generated files
+.DS_Store
+Thumbs.db
