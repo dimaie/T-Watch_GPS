@@ -154,6 +154,7 @@ bool WatchCommandController::connectWiFi(const String &arg1, const String &arg2,
     String targetSSID = "";
     String targetPass = "";
     String profileName = "";
+    bool isFromFlash = false;
 
     if (arg1.length() == 0) {
         Preferences prefs;
@@ -166,20 +167,24 @@ bool WatchCommandController::connectWiFi(const String &arg1, const String &arg2,
             out += "[CMD] Error: No saved Wi-Fi configuration found. Provide SSID & password.\r\n";
             return false;
         }
+        isFromFlash = true;
         out += "[CMD] Using saved profile '" + profileName + "'...\r\n";
     } else if (arg2.length() == 0) {
         if (loadWiFiProfile(arg1, targetSSID, targetPass)) {
             profileName = arg1;
+            isFromFlash = true;
             out += "[CMD] Loaded saved profile '" + profileName + "' (SSID: " + targetSSID + ")...\r\n";
         } else {
             targetSSID = arg1;
             targetPass = "";
             profileName = arg1;
+            isFromFlash = false;
         }
     } else {
         targetSSID = arg1;
         targetPass = arg2;
         profileName = arg1;
+        isFromFlash = false;
     }
 
     out += "[CMD] Connecting to Wi-Fi SSID: '" + targetSSID + "'...\r\n";
@@ -194,9 +199,11 @@ bool WatchCommandController::connectWiFi(const String &arg1, const String &arg2,
     out += "\r\n";
 
     if (WiFi.status() == WL_CONNECTED) {
-        saveWiFiProfile(profileName, targetSSID, targetPass);
         out += "[CMD] Wi-Fi Connected! IP: " + WiFi.localIP().toString() + "\r\n";
-        out += "[CMD] Saved Wi-Fi config '" + profileName + "' to NVS storage.\r\n";
+        if (!isFromFlash) {
+            saveWiFiProfile(profileName, targetSSID, targetPass);
+            out += "[CMD] Saved Wi-Fi config '" + profileName + "' to NVS storage.\r\n";
+        }
         return true;
     } else {
         out += "[CMD] Wi-Fi connection failed or timed out.\r\n";
